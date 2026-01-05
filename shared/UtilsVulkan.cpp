@@ -254,23 +254,14 @@ void createInstance(VkInstance* instance)
 		"VK_LAYER_KHRONOS_validation"
 	};
 
-	const std::vector<const char*> exts =
-	{
-		"VK_KHR_surface",
-#if defined (_WIN32)
-		"VK_KHR_win32_surface"
-#endif
-#if defined (__APPLE__)
-		"VK_MVK_macos_surface"
-#endif
-#if defined (__linux__)
-		"VK_KHR_xcb_surface"
-#endif
-		, VK_EXT_DEBUG_UTILS_EXTENSION_NAME
-		, VK_EXT_DEBUG_REPORT_EXTENSION_NAME
-		/* for indexed textures */
-		, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-	};
+	uint32_t glfwExtensionCount = 0;
+	const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+	std::vector<const char*> exts(glfwExtensions, glfwExtensions + glfwExtensionCount);
+	exts.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+	exts.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+	/* for indexed textures */
+	exts.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 
 	const VkApplicationInfo appinfo =
 	{
